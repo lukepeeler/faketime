@@ -26,7 +26,7 @@ JNIEXPORT jlong JNICALL newCurrentTimeInMillis(JNIEnv* env, jclass jc) {
     return originalMethodCurrentTimeInMillis(env, jc);
   }
 
-  jstring offsetPropertyName = (*env)->NewStringUTF(env, "faketime.offset.seconds");
+  jstring offsetPropertyName = (*env)->NewStringUTF(env, "faketime.millis");
   jstring offsetPropertyDefault = (*env)->NewStringUTF(env, "0");
 
   jstring offsetValue = (*env)->CallStaticObjectMethod(env, systemClass, getPropertyMethodId, offsetPropertyName, offsetPropertyDefault);
@@ -34,8 +34,7 @@ JNIEXPORT jlong JNICALL newCurrentTimeInMillis(JNIEnv* env, jclass jc) {
 
   const char *offset = (*env)->GetStringUTFChars(env, offsetValue, NULL);
 
-  jlong realTime = originalMethodCurrentTimeInMillis(env, jc);
-  jlong timeWithOffset = realTime + (atol(offset) * 1000);
+  jlong timeWithOffset = atol(offset);
 
   (*env)->ReleaseStringUTFChars(env, offsetValue, offset);
   return timeWithOffset;
